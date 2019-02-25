@@ -1,0 +1,3 @@
+[submodule "DEploid-Data-Benchmark-in_silico_field"]
+	path = DEploid-Data-Benchmark-in_silico_field
+	url = https://github.com/DEploid-dev/DEploid-Data-Benchmark-in_silico_field
