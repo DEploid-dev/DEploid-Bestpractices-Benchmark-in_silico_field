@@ -32,12 +32,11 @@ echo "
 #!/bin/bash
 #$ -cwd
 #$ -V
-####$ -P mcvean.prjc -q short.qc
+#$ -P mcvean.prjc -q short.qc
 #$ -e ErrFiles
 #$ -o OutFiles
 #$ -N ${popgroup}.${k_case}.${scenario}.${vv}
-####$ -t 1-100
-#$ -t 1-2
+#$ -t 1-100
 
 plaf=../../../../../DEploid-Data-Benchmark-in_silico_field/field_haps/${popgroup}_PLAF_14.txt
 ####panel
