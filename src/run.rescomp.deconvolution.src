@@ -1,0 +1,67 @@
+
+#./3bites.r asiaGroup1 k_eq_3 3bites
+
+#popgroup k_case scenario vv
+
+#coverage
+#${popgroup}.${k_case}.${scenario}.${SGE_TASK_ID}${vv}.ref
+#${popgroup}.${k_case}.${scenario}.${SGE_TASK_ID}${vv}.alt
+
+#panel
+#${popgroup}.${k_case}.${scenario}.${SGE_TASK_ID}.panel
+
+#exclude
+#${popgroup}.${k_case}.${scenario}.${SGE_TASK_ID}.exclude
+
+#plaf
+#../../field_haps/${popgroup}_PLAF_14.txt
+
+function run_dEploid {
+    popgroup=$1
+    k_case=$2
+    scenario=$3
+    vv=$4
+    mkdir dEploidOut/${popgroup}.${k_case}.${scenario}
+    cd dEploidOut/${popgroup}.${k_case}.${scenario}
+    #rm -r ErrFiles OutFiles
+    mkdir ErrFiles OutFiles
+
+    inputDir=../../../../../DEploid-Data-Benchmark-in_silico_field/fixed_IBD/${k_case}
+
+echo "
+#!/bin/bash
+#$ -cwd
+#$ -V
+####$ -P mcvean.prjc -q short.qc
+#$ -e ErrFiles
+#$ -o OutFiles
+#$ -N ${popgroup}.${k_case}.${scenario}.${vv}
+####$ -t 1-100
+#$ -t 1-2
+
+plaf=../../../../../DEploid-Data-Benchmark-in_silico_field/field_haps/${popgroup}_PLAF_14.txt
+####panel
+panel=${inputDir}/panelsAlmostfull/${popgroup}.${k_case}.${scenario}.\${SGE_TASK_ID}.panel.gz
+
+####exclude
+excludeAt=${inputDir}/exclude/${popgroup}.${k_case}.${scenario}.\${SGE_TASK_ID}.exclude.gz
+
+mkdir ${popgroup}.${k_case}.${scenario}.experiment\${SGE_TASK_ID}
+
+for seed in \$(seq 1 5 ); do
+ref=${inputDir}/alleleCount/${popgroup}.${k_case}.${scenario}.\${SGE_TASK_ID}p${vv}.ref.gz
+alt=${inputDir}/alleleCount/${popgroup}.${k_case}.${scenario}.\${SGE_TASK_ID}p${vv}.alt.gz
+
+prefix=${popgroup}.${k_case}.${scenario}.experiment\${SGE_TASK_ID}/${popgroup}.${k_case}.${scenario}.${vv}.experiment\${SGE_TASK_ID}.seed\${seed}.best
+common=\"-ref \${ref} -alt \${alt} -plaf \${plaf} -exclude \${excludeAt} -o \${prefix}\"
+dEploidCommon=\"\${common} -seed \${seed} -nSample 500 -rate 8 -burn 0.67 -k 4\"
+rCommon=\"\${common} -dEprefix \${prefix}\"
+dEploid \${dEploidCommon} -panel \${panel} -best
+interpretDEploid.r \${rCommon}
+
+done
+
+" > ${popgroup}.${k_case}.${scenario}.${vv}.sh
+    qsub ${popgroup}.${k_case}.${scenario}.${vv}.sh
+cd ../../
+}
