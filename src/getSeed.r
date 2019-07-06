@@ -8,7 +8,7 @@ errorAnalysis_path = paste(relative_src_path, "DEploid-Utilities/errorAnalysis.r
 print(args)
 source(errorAnalysis_path)
 
-dataRoot_path = "/well/mcvean/joezhu/DEploid-Bestpractices-Benchmark-in_silico_field/fixed_IBD/"
+dataRoot_path = "/well/mcvean/joezhu/DEploid-Bestpractices-Benchmark-in_silico_field/fixed_BEST/"
 
 popgroup = args[1]
 k_case = args[2]
@@ -27,25 +27,25 @@ ret = data.frame(ID = character(),
             scenario = character(),
             vv = character(),
             index = c(),
-            number_of_DEploidIBD_replicates = c(),
-            seed_of_DEploidIBD = c(),
+            number_of_DEploidBEST_replicates = c(),
+            seed_of_DEploidBEST = c(),
             number_of_DEploid_replicates = c(),
             seed_of_DEploid = c())
 for ( experiment_idx in 1:100 ){
     experiment_path_part = paste(scenario_path_part, ".experiment", experiment_idx, "/", sep = "")
     experiment_id = paste(prefix, ".experiment", experiment_idx, sep = "")
 
-    ibd_seeds = c()
-    ibd_k = c()
+    best_seeds = c()
+    best_k = c()
     for (seed in 1:15) {
-        logFileName = paste(scenario_path, experiment_path_part, experiment_id, ".seed", seed, ".ibd.log", sep = "")
+        logFileName = paste(scenario_path, experiment_path_part, experiment_id, ".seed", seed, ".best.log", sep = "")
         if (!file.exists(logFileName)){
             next
         }
-        ibd_seeds = c(ibd_seeds, seed)
-        ibd_k = c(ibd_k, getProportionFromLastLine(logFileName) %>% computeInferred.k)
+        best_seeds = c(best_seeds, seed)
+        best_k = c(best_k, getProportionFromLastLine(logFileName) %>% computeInferred.k)
     }
-    ibd_seed_and_k = data.frame(seed = ibd_seeds, inferred.k = ibd_k)
+    best_seed_and_k = data.frame(seed = best_seeds, inferred.k = best_k)
 
     classic_seeds = c()
     classic_k = c()
@@ -59,19 +59,19 @@ for ( experiment_idx in 1:100 ){
     }
     classic_seed_and_k = data.frame(seed = classic_seeds, inferred.k = classic_k)
 print(experiment_id)
-print(ibd_seeds)
-print(ibd_seed_and_k)
+print(best_seeds)
+print(best_seed_and_k)
 print(classic_seeds)
 print(classic_seed_and_k)
-    if (length(ibd_seeds) > 0 & length(classic_seeds) >0){
+    if (length(best_seeds) > 0 & length(classic_seeds) >0){
     tmp = data.frame(ID = experiment_id,
                 popgroup = popgroup,
                 k_case = k_case,
                 scenario = scenario,
                 vv = vv,
                 index = experiment_idx,
-                number_of_DEploidIBD_replicates = length(ibd_seeds),
-                seed_of_DEploidIBD = chooseSeed(ibd_seed_and_k),
+                number_of_DEploidBEST_replicates = length(best_seeds),
+                seed_of_DEploidBEST = chooseSeed(best_seed_and_k),
                 number_of_DEploid_replicates = length(classic_seeds),
                 seed_of_DEploid = chooseSeed(classic_seed_and_k))
     ret = rbind(ret, tmp)
