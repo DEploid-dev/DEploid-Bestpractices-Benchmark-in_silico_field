@@ -8,7 +8,7 @@ errorAnalysis_path = paste(relative_src_path, "DEploid-Utilities/errorAnalysis.r
 print(args)
 source(errorAnalysis_path)
 
-dataRoot_path = "/well/mcvean/joezhu/DEploid-Bestpractices-Benchmark-in_silico_field/assessment/fixed_IBD/"
+dataRoot_path = "/well/mcvean/joezhu/DEploid-Bestpractices-Benchmark-in_silico_field/assessment/fixed-IBD/"
 
 popgroup = args[1]
 k_case = args[2]
