@@ -39,6 +39,7 @@ for ( experiment_idx in 1:100 ){
     best_k = c()
     for (seed in 1:15) {
         logFileName = paste(scenario_path, experiment_path_part, experiment_id, ".seed", seed, ".best.log", sep = "")
+        print(logFileName)
         if (!file.exists(logFileName)){
             next
         }
