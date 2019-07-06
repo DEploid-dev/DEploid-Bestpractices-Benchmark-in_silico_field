@@ -8,6 +8,7 @@ errorAnalysis_path = paste(relative_src_path, "DEploid-Utilities/errorAnalysis.r
 print(args)
 source(errorAnalysis_path)
 
+classicRoot_path = "/well/mcvean/joezhu/DEploid-Data-Benchmark-in_silico_field/fixed_IBD/"
 dataRoot_path = "/well/mcvean/joezhu/DEploid-Bestpractices-Benchmark-in_silico_field/assessment/fixed-IBD/"
 
 popgroup = args[1]
@@ -16,9 +17,11 @@ scenario = args[3]
 vv = args[4]
 
 k_case_path = paste(dataRoot_path, k_case, "/dEploidOut/", sep = "")
+classic_k_case_path = paste(classicRoot_path, k_case, "/dEploidOut/", sep = "")
 
 scenario_path_part = paste(popgroup, ".", k_case, ".", scenario, sep = "")
 scenario_path = paste(k_case_path, scenario_path_part, "/", sep = "")
+classic_scenario_path = paste(classic_k_case_path, scenario_path_part, "/", sep = "")
 
 prefix = paste(scenario_path_part, ".", vv, sep = "")
 ret = data.frame(ID = character(),
@@ -39,7 +42,7 @@ for ( experiment_idx in 1:100 ){
     best_k = c()
     for (seed in 1:15) {
         logFileName = paste(scenario_path, experiment_path_part, experiment_id, ".seed", seed, ".best.log", sep = "")
-        print(logFileName)
+#        print(logFileName)
         if (!file.exists(logFileName)){
             next
         }
@@ -51,7 +54,8 @@ for ( experiment_idx in 1:100 ){
     classic_seeds = c()
     classic_k = c()
     for (seed in 1:15) {
-        logFileName = paste(scenario_path, experiment_path_part, experiment_id, ".seed", seed, ".log", sep = "")
+        logFileName = paste(classic_scenario_path, experiment_path_part, experiment_id, ".seed", seed, ".log", sep = "")
+        print(logFileName)
         if (!file.exists(logFileName)){
             next
         }
